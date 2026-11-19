@@ -1,0 +1,33 @@
+services:
+  web:
+    build: .
+    command: sh -c 'alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000'
+    ports:
+      - '127.0.0.1:8000:8000'
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-tasks-insecure-local-development-only-key}
+      POSTGRES_HOST: db
+      POSTGRES_DB: tasks
+      POSTGRES_USER: tasks
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tasks-local}
+      AUTO_CANCEL_INTERVAL: ${AUTO_CANCEL_INTERVAL:-60}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: tasks
+      POSTGRES_USER: tasks
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tasks-local}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tasks -d tasks']
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgres_data:

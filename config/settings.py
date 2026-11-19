@@ -1,0 +1,18 @@
+import os
+
+
+SECRET_KEY = os.environ["SECRET_KEY"]
+JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES", "60"))
+
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+POSTGRES_PORT = int(os.getenv("POSTGRES_PORT", "5432"))
+POSTGRES_DB = os.getenv("POSTGRES_DB", "tasks")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "tasks")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
+
+PAGE_SIZE = 10
+MAX_ACTIVE_TASKS = 10
+
+AUTO_CANCEL_ENABLED = os.getenv("AUTO_CANCEL_ENABLED", "1") == "1"
+AUTO_CANCEL_INTERVAL = int(os.getenv("AUTO_CANCEL_INTERVAL", "60"))
